@@ -4,7 +4,7 @@ import {juggler} from '@loopback/repository';
 const config = {
   name: 'dbcuenta',
   connector: 'mongodb',
-  url: 'mongodb+srv://kevinsiinho:rosa1045@cluster0.ybjbrep.mongodb.net/dbcuenta?retryWrites=true&w=majority',
+  url: 'mongodb://localhost:27017/cuenta',
   useNewUrlParser: true,
 };
 

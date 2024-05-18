@@ -13,6 +13,7 @@ import {
   MyUserService,
   TokenServiceBindings,
   User,
+  UserCredentials,
   UserRepository,
   UserServiceBindings,
 } from '@loopback/authentication-jwt';
@@ -23,6 +24,7 @@ import {
   get,
   getFilterSchemaFor,
   getModelSchemaRef,
+  HttpErrors,
   param,
   post,
   put,
@@ -159,8 +161,8 @@ export class UserController {
     return savedUser;
   }
 
-  @authenticate('jwt')
-  @get('/whoAmI{id}', {
+
+  @get('/whoAmI/{id}', {
     responses: {
       '200': {
         description: 'Return current user',
@@ -176,20 +178,45 @@ export class UserController {
   })
   async whoAmI2(
     @param.path.string('id') id: string,
-    @inject(SecurityBindings.USER)
     @param.filter(User, {exclude: 'where'}) filter?: FilterExcludingWhere<User>
   ): Promise<User> {
     return this.userRepository.findById(id,filter);
   }
 
-  @authenticate('jwt')
+  @get('/credenciales/{id}', {
+    responses: {
+      '200': {
+        description: 'Return current credenciales',
+        content: {
+          'application/json': {
+            schema: getModelSchemaRef(UserCredentials, { includeRelations: true }),
+          },
+        },
+      },
+    },
+  })
+  async credenciales(
+    @param.path.string('id') id: string,
+  ): Promise<UserCredentials> {
+    const user = await this.userRepository.findById(id);
+    if (!user) {
+      throw new HttpErrors.NotFound('User not found');
+    }
+    const userCredentials = await this.userRepository.userCredentials(user.id).get();
+    if (!userCredentials) {
+      throw new HttpErrors.NotFound('User credentials not found');
+    }
+    return userCredentials;
+  }
+
+
   @put('/user/{id}')
   @response(204, {
     description: 'Item PUT success',
   })
   async replaceById(
     @param.path.string('id') id: string,
-    @requestBody() user: User,
+    @requestBody() user: User2,
   ): Promise<void> {
     await this.userRepository.replaceById(id, user);
   }
@@ -201,6 +228,64 @@ export class UserController {
   })
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.userRepository.deleteById(id);
+  }
+
+
+  @put('/user/{id}/password', {
+    responses: {
+      '204': {
+        description: 'User password updated successfully',
+      },
+    },
+  })
+  async updatePassword(
+    @param.path.string('id') id: string,
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              password: { type: 'string' },
+            },
+            required: ['password'],
+          },
+        },
+      },
+    }) passwordData: { password: string },
+  ): Promise<void> {
+    const user = await this.userRepository.findById(id);
+    if (!user) {
+      throw new HttpErrors.NotFound('User not found');
+    }
+    const userCredentials = await this.userRepository.userCredentials(user.id).get();
+    if (!userCredentials) {
+      throw new HttpErrors.NotFound('User credentials not found');
+    }
+    userCredentials.password = await hash(passwordData.password, await genSalt());
+    await this.userRepository.userCredentials(user.id).patch(userCredentials);
+  }
+
+  @authenticate('jwt')
+  @del('user/credenciales/{id}', {
+    responses: {
+      '204': {
+        description: 'User credentials deleted successfully',
+      },
+    },
+  })
+  async deleteCredentials(
+    @param.path.string('id') id: string,
+  ): Promise<void> {
+    const user = await this.userRepository.findById(id);
+    if (!user) {
+      throw new HttpErrors.NotFound('User not found');
+    }
+    const userCredentials = await this.userRepository.userCredentials(user.id).get();
+    if (!userCredentials) {
+      throw new HttpErrors.NotFound('User credentials not found');
+    }
+    await this.userRepository.userCredentials(user.id).delete();
   }
 
   @get('/users/search', {

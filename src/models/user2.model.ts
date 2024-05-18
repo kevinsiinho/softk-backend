@@ -30,7 +30,7 @@ export class User2 extends Entity {
 
   @property({
     type: 'string',
-    required: true,
+    required: false,
   })
   password: string;
 
@@ -39,6 +39,18 @@ export class User2 extends Entity {
     estado: true,
   })
   estado?: string;
+
+  @property({
+    type: 'number',
+    estado: true,
+  })
+  cel?: number;
+
+  @property({
+    type: 'number',
+    estado: true,
+  })
+  codigo?: number;
 
   @hasMany(() => Item)
   productos: Item[];
