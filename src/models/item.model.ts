@@ -27,6 +27,11 @@ export class Item extends Entity {
   color?: string;
 
   @property({
+    type: 'string',
+  })
+  fecha?: string;
+
+  @property({
     type: 'boolean',
   })
   estado?: boolean;
