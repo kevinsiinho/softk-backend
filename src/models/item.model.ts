@@ -24,12 +24,17 @@ export class Item extends Entity {
   @property({
     type: 'string',
   })
-  color?: string;
+  fecha?: string;
 
   @property({
-    type: 'string',
+    type: 'date',
   })
-  fecha?: string;
+  updated?: Date;
+
+  @property({
+    type: 'date',
+  })
+  reciente?: Date;
 
   @property({
     type: 'boolean',
@@ -40,6 +45,35 @@ export class Item extends Entity {
     type: 'boolean',
   })
   favorito?: boolean;
+
+  @property({
+    type: 'string',
+    required: true,
+  })
+  icono?: string;
+
+  @property({
+    type: 'string',
+  })
+  colorLetra?: string;
+
+  @property({
+    type: 'string',
+    required: true,
+  })
+  Idtarjeta: string;
+
+  @property({
+    type: 'string',
+    required: true,
+  })
+  NombreTarjeta: string;
+
+  @property({
+    type: 'string',
+    required: false,
+  })
+  ColorFondo: string;
 
   @property({
     type: 'array',
