@@ -21,21 +21,16 @@ export class EmailController {
 
       // Configurar el servicio de transporte de nodemailer
       const transporter = nodemailer.createTransport({
-        host: 'smtp-mail.outlook.com',
-        port: 587,
-        secure: false, // true for 465, false for other ports
+        service: 'gmail',
         auth: {
-          user: 'softk0131@hotmail.com',
-          pass: 'Kevin1045.',
+          user: 'softk0131@gmail.com',
+          pass: 'nvrx rxzs mzyi rqes',
         },
-        tls: {
-          ciphers: 'SSLv3'
-        }
       });
 
       // Configurar el correo electrónico
       const mailOptions = {
-        from: 'softk0131@hotmail.com',
+        from: 'softk0131@gmail.com',
         to: destinatario,
         subject: asunto,
         html: cuerpo,
@@ -46,7 +41,8 @@ export class EmailController {
 
       response.status(200).end();
     } catch (error) {
-      response.status(500).end();
+      console.error('Error al enviar el correo:', error);
+      response.status(500).send({ error: error.message });
     }
   }
 }

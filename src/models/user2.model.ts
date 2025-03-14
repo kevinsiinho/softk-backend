@@ -52,6 +52,12 @@ export class User2 extends Entity {
   })
   codigo?: number;
 
+  @property({
+    type: 'string',
+    required: false,
+  })
+  ultimaVez?: string;
+
   @hasMany(() => Item)
   productos: Item[];
 
