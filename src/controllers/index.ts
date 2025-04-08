@@ -4,3 +4,6 @@ export * from './user.controller';
 export * from './email.controller';
 export * from './device.controller';
 export * from './diseno-tarjeta.controller';
+export * from './nota.controller';
+export * from './bolsillo.controller';
+export * from './deposito.controller';

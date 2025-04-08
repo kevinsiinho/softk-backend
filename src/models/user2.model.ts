@@ -54,7 +54,6 @@ export class User2 extends Entity {
 
   @property({
     type: 'string',
-    required: false,
   })
   ultimaVez?: string;
 

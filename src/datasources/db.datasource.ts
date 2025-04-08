@@ -1,14 +1,12 @@
 import {inject, lifeCycleObserver, LifeCycleObserver} from '@loopback/core';
 import {juggler} from '@loopback/repository';
 
-
 const config = {
   name: 'dbcuenta',
   connector: 'mongodb',
   url: 'mongodb+srv://kevinsiinho:rosa1045@cluster0.ybjbrep.mongodb.net/dbcuenta?retryWrites=true&w=majority',
   useNewUrlParser: true,
 };
-
 
 // Observe application's life cycle to disconnect the datasource when
 // application is stopped. This allows the application to be shut down
