@@ -37,6 +37,11 @@ export class Deposito extends Entity {
   @property({
     type: 'string',
   })
+  idItem?: string;
+
+  @property({
+    type: 'string',
+  })
   idCreador?: string;
 
   @property({
