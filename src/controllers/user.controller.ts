@@ -69,7 +69,7 @@ export class UserController {
     @inject(SecurityBindings.USER, {optional: true})
     public user: UserProfile,
     @repository(UserRepository) protected userRepository: UserRepository,
-  ) {}
+  ) { }
 
   @post('/users/login', {
     responses: {
@@ -123,6 +123,24 @@ export class UserController {
     currentUserProfile: UserProfile,
   ): Promise<string> {
     return currentUserProfile[securityId];
+  }
+
+  @get('/users')
+  @response(200, {
+    description: 'Array of user model instances',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'array',
+          items: getModelSchemaRef(User, {includeRelations: true}),
+        },
+      },
+    },
+  })
+  async find(
+    @param.filter(User) filter?: Filter<User>,
+  ): Promise<User[]> {
+    return this.userRepository.find(filter);
   }
 
   @post('/signup', {
@@ -180,7 +198,7 @@ export class UserController {
     @param.path.string('id') id: string,
     @param.filter(User, {exclude: 'where'}) filter?: FilterExcludingWhere<User>
   ): Promise<User> {
-    return this.userRepository.findById(id,filter);
+    return this.userRepository.findById(id, filter);
   }
 
   @get('/credenciales/{id}', {
@@ -189,7 +207,7 @@ export class UserController {
         description: 'Return current credenciales',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(UserCredentials, { includeRelations: true }),
+            schema: getModelSchemaRef(UserCredentials, {includeRelations: true}),
           },
         },
       },
@@ -246,13 +264,13 @@ export class UserController {
           schema: {
             type: 'object',
             properties: {
-              password: { type: 'string' },
+              password: {type: 'string'},
             },
             required: ['password'],
           },
         },
       },
-    }) passwordData: { password: string },
+    }) passwordData: {password: string},
   ): Promise<void> {
     const user = await this.userRepository.findById(id);
     if (!user) {
@@ -296,7 +314,7 @@ export class UserController {
           'application/json': {
             schema: {
               type: 'array',
-              items: getModelSchemaRef(User, { includeRelations: true }),
+              items: getModelSchemaRef(User, {includeRelations: true}),
             },
           },
         },
@@ -310,12 +328,12 @@ export class UserController {
   ): Promise<User[]> {
     const where: Where<User> = {
       or: [
-        { name: { like: query, options: 'i' } },
-        { email: { like: query, options: 'i' } },
-        { nickname: { like: query, options: 'i' } },
+        {name: {like: query, options: 'i'}},
+        {email: {like: query, options: 'i'}},
+        {nickname: {like: query, options: 'i'}},
       ],
     };
 
-    return this.userRepository.find({ where, ...filter });
+    return this.userRepository.find({where, ...filter});
   }
 }
