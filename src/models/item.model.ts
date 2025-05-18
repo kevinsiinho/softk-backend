@@ -41,7 +41,7 @@ export class Item extends Entity {
   })
   estado?: boolean;
 
-    @property({
+  @property({
     type: 'boolean',
   })
   favorito?: boolean;
@@ -86,6 +86,28 @@ export class Item extends Entity {
     itemType: 'object',
   })
   compartir: object[];
+
+  @property({
+    type: 'number',
+  })
+  diahistorial?: number;
+
+
+  @property({
+    type: 'boolean',
+  })
+  estadohistorial?: boolean;
+
+  @property({
+    type: 'boolean',
+  })
+  realizado?: boolean;
+
+  @property({
+    type: 'array',
+    itemType: 'object',
+  })
+  historial: object[];
 
   @belongsTo(() => User2)
   userId?: string;
