@@ -44,7 +44,14 @@ export class MyJWTService implements TokenService {
         [securityId]: decodedToken.id,
       };
       return userProfile;
-    } catch (err) {
+    } catch (err: any) {
+      // Mejorar el manejo de errores
+      if (err.name === 'TokenExpiredError') {
+        throw new HttpErrors.Unauthorized('Token expirado. Por favor, renueva tu sesión.');
+      }
+      if (err.name === 'JsonWebTokenError') {
+        throw new HttpErrors.Unauthorized('Token inválido.');
+      }
       throw new HttpErrors.Unauthorized('Token inválido o expirado.');
     }
   }

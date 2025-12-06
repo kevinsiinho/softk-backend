@@ -104,6 +104,35 @@ export class UserController {
   }
 
   @authenticate('jwt')
+  @post('/users/refresh-token', {
+    responses: {
+      '200': {
+        description: 'Token renovado',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                token: {
+                  type: 'string',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  })
+  async refreshToken(
+    @inject(SecurityBindings.USER)
+    currentUserProfile: UserProfile,
+  ): Promise<{token: string}> {
+    // Generar un nuevo token con el mismo perfil de usuario
+    const newToken = await this.jwtService.generateToken(currentUserProfile);
+    return {token: newToken};
+  }
+
+  @authenticate('jwt')
   @get('/whoAmI', {
     responses: {
       '200': {
