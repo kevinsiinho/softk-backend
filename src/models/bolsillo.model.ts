@@ -59,6 +59,11 @@ export class Bolsillo extends Entity {
   })
   estado?: boolean;
 
+  @property({
+    type: 'boolean',
+  })
+  ocultarBolsillo?: boolean;
+
   constructor(data?: Partial<Bolsillo>) {
     super(data);
   }
