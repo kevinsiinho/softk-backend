@@ -61,6 +61,17 @@ export class Bolsillo extends Entity {
 
   @property({
     type: 'boolean',
+    default: false,
+  })
+  EstadoMeta?: boolean;
+
+  @property({
+    type: 'number',
+  })
+  valorMeta?: number;
+
+  @property({
+    type: 'boolean',
   })
   ocultarBolsillo?: boolean;
 
